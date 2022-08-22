@@ -8,7 +8,7 @@
   <arg name="verbose" default="true"/>
 
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
-    <!-- <arg name="world_name" value="$(find drone_tracker)/worlds/cameraless.world"/> -->
+    <arg name="world_name" value="$(find vacbot)/worlds/turtlebot3_house.world"/>
     <arg name ="verbose" value = "$(arg verbose)" />
     <arg name="paused" value="$(arg paused)"/>
     <arg name="use_sim_time" value="$(arg use_sim_time)"/>
