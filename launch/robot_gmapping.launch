@@ -2,7 +2,7 @@
   <!-- Arguments -->
   <arg name="model" default="m2wr"/>
   <!-- <arg name="configuration_basename" default="turtlebot3_lds_2d.lua"/> -->
-  <arg name="set_base_frame" default="robot_footprint"/>
+  <arg name="set_base_frame" default="sensor_laser"/>
   <arg name="set_odom_frame" default="odom"/>
   <arg name="set_map_frame"  default="map"/>
 

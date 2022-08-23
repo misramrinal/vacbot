@@ -1,6 +1,7 @@
 <?xml version="1.0" ?>
 <launch>
- <arg name="model" default="m2wr"/>
+  <!-- <remap from="/m2wr/laser_scan" to="/sensor_msgs/LaserScan"/> -->
+  <arg name="model" default="m2wr"/>
   <arg name="x_pos" default="-3.0"/>
   <arg name="y_pos" default="1.0"/>
   <arg name="z_pos" default="0.0"/>
@@ -24,10 +25,11 @@
     <arg name="debug" value="$(arg debug)"/>
   </include>
 
-  <!-- <include file="$(find hector_quadrotor_gazebo)/launch/spawn_quadrotor.launch"/> -->\
-  
+  <!-- <node name="mapper" pkg="gmapping" type="slam_gmapping">
+    <param name="scan" value="/sensor_msgs/LaserScan"/>
+    <param name="_base_frame" value="sensor_laser"/>
+  </node> -->
 
   <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model m2wr -x $(arg x_pos) -y $(arg y_pos) -z $(arg z_pos) " output="screen"/>
-   <!--<node name="rviz" pkg="rviz" type="rviz" respawn="false"
-		  args="-d $(find vacbot)/rviz/robot_gmapping.rviz"/>-->\
+  <node name="rviz" pkg="rviz" type="rviz" respawn="false" args="-d $(find vacbot)/rviz/robot_gmapping.rviz"/>
 </launch>

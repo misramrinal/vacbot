@@ -78,7 +78,7 @@ Visualization Manager:
           Show Trail: false
           Value: true
         imu_link:
-          Alpha: 0
+          Alpha: 1
           Show Axes: false
           Show Trail: false
         wheel_left_link:
@@ -136,7 +136,7 @@ Visualization Manager:
       Size (Pixels): 3
       Size (m): 0.0300000007
       Style: Flat Squares
-      Topic: /m2wr/laser/scan
+      Topic: /m2wr/laser_scan
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
