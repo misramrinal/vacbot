@@ -13,10 +13,22 @@
   <arg name="debug" default="false"/>
   <arg name="verbose" default="true"/>
   
-  <include file="$(find vacbot)/launch/robot_description.launch"/>
+  <!-- <include file="$(find vacbot)/launch/robot_description.launch"/> -->
+
+   <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find vacbot)/urdf/m2wr.xacro'" />
+
+    <!-- Send fake joint values-->
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+        <param name="use_gui" value="false"/>
+    </node>
+
+    <!-- Send robot states to tf -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
+	
+    </node>
 
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
-    <arg name="world_name" value="$(find vacbot)/worlds/rough.world"/>
+    <arg name="world_name" value="$(find vacbot)/worlds/turtlebot3_house.world"/>
     <arg name ="verbose" value = "$(arg verbose)" />
     <arg name="paused" value="$(arg paused)"/>
     <arg name="use_sim_time" value="$(arg use_sim_time)"/>
@@ -31,5 +43,5 @@
   </node> -->
 
   <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model m2wr -x $(arg x_pos) -y $(arg y_pos) -z $(arg z_pos) " output="screen"/>
-  <node name="rviz" pkg="rviz" type="rviz" respawn="false" args="-d $(find vacbot)/rviz/default.rviz"/>
+  <!-- <node name="rviz" pkg="rviz" type="rviz" respawn="false" args="-d $(find vacbot)/rviz/default.rviz"/> -->
 </launch>
