@@ -161,7 +161,7 @@ Visualization Manager:
       Name: Map
       Topic: /map
       Unreliable: false
-      Use Timestamp: false
+      Use Timestamp: true
       Value: true
   Enabled: true
   Global Options:
