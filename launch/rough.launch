@@ -31,5 +31,5 @@
   </node> -->
 
   <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model m2wr -x $(arg x_pos) -y $(arg y_pos) -z $(arg z_pos) " output="screen"/>
-  <node name="rviz" pkg="rviz" type="rviz" respawn="false" args="-d $(find vacbot)/rviz/robot_gmapping.rviz"/>
+  <node name="rviz" pkg="rviz" type="rviz" respawn="false" args="-d $(find vacbot)/rviz/default.rviz"/>
 </launch>
