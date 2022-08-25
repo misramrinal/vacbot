@@ -20,12 +20,12 @@ def on_press(key):
             print("backward")
             
         elif key == KeyCode(char='a'):
-            move.angular.z = 0.5
-            print("left")
+            move.angular.z = -0.5
+            print("right")
         
         elif key == KeyCode(char='d'):
-            move.angular.z = -0.5
-            print("right")    
+            move.angular.z = 0.5
+            print("left")    
 
     except:
         if key == Key.esc:
