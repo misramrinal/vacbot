@@ -1,6 +1,6 @@
 local_costmap:
   global_frame: odom
-  robot_base_frame: base_footprint
+  robot_base_frame: sensor_laser
 
   update_frequency: 10.0
   publish_frequency: 10.0
