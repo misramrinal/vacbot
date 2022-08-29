@@ -1,0 +1,130 @@
+<?xml version="1.0" ?>
+<launch>
+  <!-- <remap from="/m2wr/laser_scan" to="/sensor_msgs/LaserScan"/> -->
+  <arg name="model" default="m2wr"/>
+  <arg name="x_pos" default="5.0"/>
+  <arg name="y_pos" default="-2.0"/>
+  <arg name="z_pos" default="0.1"/>
+
+  <arg name="paused" default="false"/>
+  <arg name="use_sim_time" default="true"/>
+  <arg name="gui" default="true"/>
+  <arg name="headless" default="false"/>
+  <arg name="debug" default="false"/>
+  <arg name="verbose" default="true"/>
+  
+  <!-- <include file="$(find vacbot)/launch/robot_description.launch"/> -->
+
+   <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find vacbot)/urdf/m2wr.xacro'" />
+
+    <!-- Send fake joint values-->
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+        <param name="use_gui" value="false"/>
+    </node>
+
+    <!-- Send robot states to tf -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
+	
+    </node>
+
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find vacbot)/worlds/small_house.world"/>
+    <arg name ="verbose" value = "$(arg verbose)" />
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+    <arg name="gui" value="$(arg gui)"/>
+    <arg name="headless" value="$(arg headless)"/>
+    <arg name="debug" value="$(arg debug)"/>
+  </include>
+
+  <!-- <node name="mapper" pkg="gmapping" type="slam_gmapping">
+    <param name="scan" value="/sensor_msgs/LaserScan"/>
+    <param name="_base_frame" value="sensor_laser"/>
+  </node> -->
+
+  <!-- Arguments -->
+  <arg name="map_file" default="$(find vacbot)/maps/map.yaml"/>
+  <arg name="open_rviz" default="true"/>
+  <arg name="move_forward_only" default="false"/>
+
+  <!-- Turtlebot3 -->
+  <!-- <include file="$(find turtlebot3_bringup)/launch/turtlebot3_remote.launch">
+    <arg name="model" value="$(arg model)" />
+  </include> -->
+
+  <!-- Map server -->
+  <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/>
+
+  <!-- Arguments -->
+  <arg name="scan_topic"     default="/m2wr/laser_scan"/>
+  <arg name="initial_pose_x" default="5.0"/>
+  <arg name="initial_pose_y" default="-2.0"/>
+  <arg name="initial_pose_a" default="-3.14"/>
+
+  <!-- AMCL -->
+  <node pkg="amcl" type="amcl" name="amcl">
+
+    <param name="min_particles"             value="500"/>
+    <param name="max_particles"             value="3000"/>
+    <param name="kld_err"                   value="0.02"/>
+    <param name="update_min_d"              value="0.20"/>
+    <param name="update_min_a"              value="0.20"/>
+    <param name="resample_interval"         value="1"/>
+    <param name="transform_tolerance"       value="0.5"/>
+    <param name="recovery_alpha_slow"       value="0.00"/>
+    <param name="recovery_alpha_fast"       value="0.00"/>
+    <param name="initial_pose_x"            value="$(arg initial_pose_x)"/>
+    <param name="initial_pose_y"            value="$(arg initial_pose_y)"/>
+    <param name="initial_pose_a"            value="$(arg initial_pose_a)"/>
+    <param name="gui_publish_rate"          value="50.0"/>
+
+    <remap from="scan"                      to="$(arg scan_topic)"/>
+    <param name="laser_max_range"           value="3.5"/>
+    <param name="laser_max_beams"           value="180"/>
+    <param name="laser_z_hit"               value="0.5"/>
+    <param name="laser_z_short"             value="0.05"/>
+    <param name="laser_z_max"               value="0.05"/>
+    <param name="laser_z_rand"              value="0.5"/>
+    <param name="laser_sigma_hit"           value="0.2"/>
+    <param name="laser_lambda_short"        value="0.1"/>
+    <param name="laser_likelihood_max_dist" value="2.0"/>
+    <param name="laser_model_type"          value="likelihood_field"/>
+
+    <param name="odom_model_type"           value="diff"/>
+    <param name="odom_alpha1"               value="0.1"/>
+    <param name="odom_alpha2"               value="0.1"/>
+    <param name="odom_alpha3"               value="0.1"/>
+    <param name="odom_alpha4"               value="0.1"/>
+    <param name="odom_frame_id"             value="odom"/>
+    <param name="base_frame_id"             value="sensor_laser"/>
+
+  </node>
+
+  <!-- Arguments -->
+  <arg name="cmd_vel_topic" default="cmd_vel" />
+  <arg name="odom_topic" default="odom" />
+
+  <!-- move_base -->
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" />
+    <rosparam file="$(find vacbot)/param/costmap_common_params_m2wr.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find vacbot)/param/costmap_common_params_m2wr.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find vacbot)/param/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find vacbot)/param/global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find vacbot)/param/move_base_params.yaml" command="load" />
+    <rosparam file="$(find vacbot)/param/dwa_local_planner_params_m2wr.yaml" command="load" />
+    <remap from="cmd_vel" to="$(arg cmd_vel_topic)"/>
+    <remap from="odom" to="$(arg odom_topic)"/>
+    <param name="DWAPlannerROS/min_vel_x" value="0.0" if="$(arg move_forward_only)" />
+  </node>
+
+  <!-- rviz -->
+  <group if="$(arg open_rviz)"> 
+    <node pkg="rviz" type="rviz" name="rviz" required="true"
+          args="-d $(find vacbot)/rviz/robot_navigation.rviz"/>
+  </group>
+
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model m2wr -x $(arg x_pos) -y $(arg y_pos) -z $(arg z_pos) -Y 3.14" output="screen"/>
+  <!-- <node name="rviz" pkg="rviz" type="rviz" respawn="false" args="-d $(find vacbot)/rviz/default.rviz"/> -->
+
+</launch>
