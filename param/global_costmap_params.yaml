@@ -1,6 +1,6 @@
 global_costmap:
   global_frame: map
-  robot_base_frame: sensor_laser
+  robot_base_frame: link_chassis
 
   update_frequency: 10.0
   publish_frequency: 10.0
