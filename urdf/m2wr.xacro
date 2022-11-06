@@ -5,7 +5,7 @@
   <xacro:include filename="$(find vacbot)/urdf/m2wr.gazebo" />
   <xacro:include filename="$(find vacbot)/urdf/macros.xacro" />
   
-  <link name="link_chassis">
+  <link name="base_link">
     <!-- pose and inertial -->
     <pose>0 0 0.1 0 0 0</pose>
     <inertial>
@@ -76,7 +76,7 @@
   
   <joint name="joint_sensor_laser" type="fixed">
     <origin xyz="0.15 0 0.05" rpy="0 0 0"/>
-    <parent link="link_chassis"/>
+    <parent link="base_link"/>
     <child link="sensor_laser"/>
   </joint>
   

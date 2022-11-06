@@ -26,7 +26,7 @@
       <joint name="${name}" type="continuous">
         <origin rpy="0 0 0" xyz="${origin_xyz}"/>
         <child link="${child}"/>
-        <parent link="link_chassis"/>
+        <parent link="base_link"/>
         <axis rpy="0 0 0" xyz="0 1 0"/>
         <limit effort="10000" velocity="1000"/>
         <joint_properties damping="1.0" friction="1.0"/>

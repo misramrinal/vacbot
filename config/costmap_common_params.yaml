@@ -1,0 +1,17 @@
+footprint: [[0.25, 0.15], [0.25, -0.15], [-0.25, -0.15], [-0.25, 0.15]]
+robot_base_frame: base_link
+update_frequency: 5.0
+publish_frequency: 3.0
+transform_tolerance: 0.5
+
+obstacle_range: 5.5
+raytrace_range: 6.0
+
+#layer definitions
+static_layer:
+    map_topic: /map
+    subscribe_to_updates: true
+
+obstacle_layer:
+    observation_sources: scan
+    laser_scan_sensor: {sensor_frame: base_scan, data_type: LaserScan, topic: /m2wr/laser_scan, marking: true, clearing: true}
